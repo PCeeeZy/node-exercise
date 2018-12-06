@@ -11,28 +11,45 @@ let liri = process.argv[2];
 // LIRI FUNCTIONS
 function spotifySearch() {
     // using songName
-        // log--Artist(s)
-        // log--Song Name
-        // log--Preview Link
-        // log--Album Name
+    // log--Artist(s)
+    // log--Song Name
+    // log--Preview Link
+    // log--Album Name
 }
 function movieSearch() {
     // using movieName
-        // log--Movie Title
-        // log--Year the movie came out
-        // log--IMDB Rating
-        // log--Rotten Tomatoes
-        // log--Country of production
-        // log--Movie language
-        // log--Movie plot
-        // log--Actors
+    let movieQuery = process.argv[3];
+    axios.get(`http://www.omdbapi.com/?t=${movieQuery}&y=&plot=short&apikey=trilogy`).then(
+        function (response) {
+            let rd = response.data;
+            // log--Movie Title
+            console.log(`The movie is titled: ${rd.Title}.`);
+            // log--Year the movie came out
+            console.log(`${rd.Title} was released in the year ${rd.Year}.`);
+            // log--IMDB Rating
+            console.log(`IMDB users rated it a ${rd.imdbRating}/10 with ${rd.imdbVotes} votes.`);
+            // log--Rotten Tomatoes
+            console.log(`Rotten Tomatoes gave a ${rd.Ratings[1].Value} positive feedback.`);
+            // log--Country of production
+            console.log(`${rd.Title} was produced in ${rd.Country} by ${rd.Production}.`);
+            // log--Movie language
+            console.log(`Language(s) include ${rd.Language}.`);
+            // log--Movie plot
+            console.log(`The plot involves ${rd.Plot}`);
+            // log--Actors
+            console.log(`It stars ${rd.Actors}.`);
+            // log--Writers and Directors
+            console.log(`It is written by ${rd.Writer} and directed by ${rd.Director}.`);
+        }
+    );  
 }
+
 function bandSearch() {
     // using bandName
-        // log--Venue Name
-        // log--Venue Location
-        // log--Date of the Event
-            // use moment (MM/DD/YYYY)
+    // log--Venue Name
+    // log--Venue Location
+    // log--Date of the Event
+    // use moment (MM/DD/YYYY)
 }
 function random() {
 
@@ -43,8 +60,8 @@ function random() {
 
 
 // LIRI COMMANDS
-    // LIRI HELP
-if (liri==='commands' || 'help' || 'command' || '?' || '/h' || '/help') {
+// LIRI HELP
+if (liri === 'commands' || 'help' || 'command' || '?' || '/h' || '/help') {
     console.log('Available commands include:');
     console.log('node liri spotify <"song-name">');
     console.log('node liri bands <"band-name">');
@@ -54,35 +71,39 @@ if (liri==='commands' || 'help' || 'command' || '?' || '/h' || '/help') {
     console.log('node liri random');
     console.log('node liri do-what-it-says');
 }
-    // LIRI---SPOTIFY
-if (liri==='spotify') {
+// LIRI---SPOTIFY
+if (liri === 'spotify') {
     let songName = process.argv[3];
-    if (songName==="") {
-        songName==="The Sign";
+    if (songName === "") {
+        songName === "The Sign";
         spotifySearch(songName);
     }
     else {
-    spotifySearch(songName);
+        spotifySearch(songName);
     }
 }
 
-    // LIRI--BANDS IN TOWN
-if (liri==='bands' || 'band') {
+// LIRI--BANDS IN TOWN
+if (liri === 'bands' || 'band') {
 
 }
-    // LIRI---OMDB
-if (liri==='movie' || 'movies') {
+
+// LIRI---OMDB
+if (liri === 'movie' || 'movies') {
+    movieSearch();
+}
+
+// LIRI---MOMENT
+if (liri === 'moment') {
 
 }
-    // LIRI---MOMENT
-if (liri==='moment') {
+
+// LIRI---DOTENV
+if (liri === 'dotenv') {
 
 }
-    // LIRI---DOTENV
-if (liri==='dotenv') {
 
-}
-    // LIRI---DO WHAT IT SAYS
-if (liri==='do-what-it-says') {
+// LIRI---DO WHAT IT SAYS
+if (liri === 'do-what-it-says') {
 
 }
