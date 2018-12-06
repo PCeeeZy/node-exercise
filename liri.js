@@ -61,11 +61,11 @@ function random() {
 
 // LIRI COMMANDS
 // LIRI HELP
-if (liri === 'commands' || 'help' || 'command' || '?' || '/h' || '/help') {
+if (liri === 'commands' || liri === 'help' || liri === 'command' || liri === '?' || liri === '/h' || liri === '/help' || liri === '') {
     console.log('Available commands include:');
-    console.log('node liri spotify <"song-name">');
-    console.log('node liri bands <"band-name">');
-    console.log('node liri movie <"movie-name">');
+    console.log('node liri spotify <"song-name"> to search for a song by name.');
+    console.log('node liri bands <"band-name"> to find an artists upcoming performances.');
+    console.log('node liri movie <"movie-name"> to find out movie details');
     // ~~~~~~~~~~~~UPDATE BELOW~~~~~~~~~~~~~~~
     console.log('node liri moment <*******>');
     console.log('node liri random');
@@ -84,12 +84,12 @@ if (liri === 'spotify') {
 }
 
 // LIRI--BANDS IN TOWN
-if (liri === 'bands' || 'band') {
+if (liri === 'bands' || liri ==='band') {
 
 }
 
 // LIRI---OMDB
-if (liri === 'movie' || 'movies') {
+if (liri === 'movie' || liri === 'movies') {
     movieSearch();
 }
 
