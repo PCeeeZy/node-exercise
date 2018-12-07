@@ -1,0 +1,18 @@
+{ 
+    offers: [ [Object] ],
+        venue:
+        { 
+            name: 'I AM THE HIGHWAY: A TRIBUTE TO CHRIS CORNELL',
+            country: 'United States',
+            region: 'CA',
+            city: 'Los Angeles',
+            latitude: '34.0522342',
+            longitude: '-118.2436849' },
+        datetime: '2019-01-16T19:00:40',
+        on_sale_datetime: '',
+        description: '',
+        lineup: [ 'Foo Fighters' ],
+        id: '100511928',
+        artist_id: '250',
+        url:
+        'https://www.bandsintown.com/e/100511928?app_id=codingbootcamp&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event' },

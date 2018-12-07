@@ -7,6 +7,7 @@ const fs = require('fs');
 
 
 let liri = process.argv[2];
+let query = process.argv[3];
 
 // LIRI FUNCTIONS
 function spotifySearch() {
@@ -17,9 +18,10 @@ function spotifySearch() {
     // log--Album Name
 }
 function movieSearch() {
-    // using movieName
-    let movieQuery = process.argv[3];
-    axios.get(`http://www.omdbapi.com/?t=${movieQuery}&y=&plot=short&apikey=trilogy`).then(
+    // if (query='') {
+    //     query='Mr. Nobody'
+    // }
+    axios.get(`http://www.omdbapi.com/?t=${query}&y=&plot=short&apikey=trilogy`).then(
         function (response) {
             let rd = response.data;
             // log--Movie Title
@@ -45,11 +47,23 @@ function movieSearch() {
 }
 
 function bandSearch() {
-    // using bandName
-    // log--Venue Name
-    // log--Venue Location
-    // log--Date of the Event
-    // use moment (MM/DD/YYYY)
+    axios.get(`https://rest.bandsintown.com/artists/${query}/events?app_id=codingbootcamp`).then(
+        function (response) {
+            let rd = response.data;
+            let bandName = rd[0].lineup;
+            let venueCity = rd[0].venue.city;
+            let venueRegion = rd[0].venue.region;
+            let venueCountry = rd[0].venue.country;
+            let venueName = rd[0].venue.name;
+            let timeUTC = rd[0].datetime;
+            // LOG--Venue Name
+            console.log(`${bandName}'s next show is "${venueName}".`);
+            // LOG--Venue Location
+            console.log(`It's going to take place in ${venueCity}, ${venueRegion}, ${venueCountry}.`);
+            // LOG--Date of the event
+                // Moment turns timeUTC to MM/DD/YYYY
+        }
+    )
 }
 function random() {
 
@@ -64,22 +78,31 @@ function showHelp() {
     console.log('node liri moment <*******>');
     console.log('node liri random');
     console.log('node liri do-what-it-says');
+    console.log('Please remember to use "" for any multi-word searches.')
 }
 
-// SWITCH CASES
+// SWITCH CASES---LIRI
 switch (liri) {
+
+    // SPOTIFY CASE
     case 'spotify':
     case 'music':
         spotifySearch();
         break;
 
+    // MOVIE CASE
     case 'movie':
     case 'movies':
     case 'ombd':
     case 'imdb':
-       movieSearch();
+        // switch (query) {
+        //     default:
+        //         query='Mr. Nobody';
+        // }
+        movieSearch();
         break;
-    
+
+    // BAND/CONCERT CASE
     case 'band':
     case 'bands':
     case 'concert':
@@ -87,15 +110,16 @@ switch (liri) {
         bandSearch();
         break;
 
+    // RANDOM CASE
     case 'do-what-it-says':
     case 'random':
     case 'go-nuts':
     case 'planters':
         random();
         break;
-    
+
+    // If anything other than the above commands display HELP
     default:
         showHelp();
         break;
-
 }
