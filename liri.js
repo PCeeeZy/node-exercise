@@ -41,7 +41,7 @@ function movieSearch() {
             // log--Writers and Directors
             console.log(`It is written by ${rd.Writer} and directed by ${rd.Director}.`);
         }
-    );  
+    );
 }
 
 function bandSearch() {
@@ -55,13 +55,7 @@ function random() {
 
 }
 
-
-
-
-
-// LIRI COMMANDS
-// LIRI HELP
-if (liri === 'commands' || liri === 'help' || liri === 'command' || liri === '?' || liri === '/h' || liri === '/help' || liri === '') {
+function showHelp() {
     console.log('Available commands include:');
     console.log('node liri spotify <"song-name"> to search for a song by name.');
     console.log('node liri bands <"band-name"> to find an artists upcoming performances.');
@@ -71,39 +65,37 @@ if (liri === 'commands' || liri === 'help' || liri === 'command' || liri === '?'
     console.log('node liri random');
     console.log('node liri do-what-it-says');
 }
-// LIRI---SPOTIFY
-if (liri === 'spotify') {
-    let songName = process.argv[3];
-    if (songName === "") {
-        songName === "The Sign";
-        spotifySearch(songName);
-    }
-    else {
-        spotifySearch(songName);
-    }
-}
 
-// LIRI--BANDS IN TOWN
-if (liri === 'bands' || liri ==='band') {
+// SWITCH CASES
+switch (liri) {
+    case 'spotify':
+    case 'music':
+        spotifySearch();
+        break;
 
-}
+    case 'movie':
+    case 'movies':
+    case 'ombd':
+    case 'imdb':
+       movieSearch();
+        break;
+    
+    case 'band':
+    case 'bands':
+    case 'concert':
+    case 'concerts':
+        bandSearch();
+        break;
 
-// LIRI---OMDB
-if (liri === 'movie' || liri === 'movies') {
-    movieSearch();
-}
-
-// LIRI---MOMENT
-if (liri === 'moment') {
-
-}
-
-// LIRI---DOTENV
-if (liri === 'dotenv') {
-
-}
-
-// LIRI---DO WHAT IT SAYS
-if (liri === 'do-what-it-says') {
+    case 'do-what-it-says':
+    case 'random':
+    case 'go-nuts':
+    case 'planters':
+        random();
+        break;
+    
+    default:
+        showHelp();
+        break;
 
 }
