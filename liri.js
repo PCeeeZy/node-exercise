@@ -15,24 +15,33 @@ function inqList() {
     inquirer.prompt([
         {
             name: "choices",
-            type: list,
+            type: "list",
             choices: ["Movie Search", "Song Search", "Band Search"],
             message: "which type of search would you like to complete?"
         }
     ]).then(function(response) {
-        switch (response) {
-            case response.choices[0]:
+        if(response.choices === "Movie Search") {
             inqOMDB();
-            break;
-
-            case response.choices[1]:
-            inqSpotify();
-            break;
-
-            case response.choices[2]:
-            inqBand();
-            break;
         }
+        if(response.choices === "Song Search") {
+            inqSpotify();
+        }
+        else {
+            inqBand()
+        }
+        // switch (response) {
+        //     case response.choices[0]:
+        //     inqOMDB();
+        //     break;
+
+        //     case response.choices[1]:
+        //     inqSpotify();
+        //     break;
+
+        //     case response.choices[2]:
+        //     inqBand();
+        //     break;
+        // }
     })
 }
 
@@ -78,9 +87,9 @@ function spotifySearch() {
     // log--Album Name
 }
 function movieSearch(query) {
-    // if (query='') {
-    //     query='Mr. Nobody'
-    // }
+    if(!query) {
+        query="Mr. Nobody"
+    }
     axios.get(`http://www.omdbapi.com/?t=${query}&y=&plot=short&apikey=trilogy`).then(
         function (response) {
             let rd = response.data;
@@ -121,6 +130,8 @@ function bandSearch(query) {
             // LOG--Venue Location
             console.log(`It's going to take place in ${venueCity}, ${venueRegion}, ${venueCountry}.`);
             // LOG--Date of the event
+            let timeMMDDYYYY = moment(timeUTC).format('MM/DD/YYYY');
+            console.log(`This show is on ${timeMMDDYYYY}.`)
                 // Moment turns timeUTC to MM/DD/YYYY
         }
     )
@@ -148,6 +159,7 @@ switch (liri) {
     // SPOTIFY CASE
     case 'spotify':
     case 'music':
+    case 'spotify-this-song':
         spotifySearch(query);
         break;
 
