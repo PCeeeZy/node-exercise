@@ -4,10 +4,70 @@ const spotify = require('node-spotify-api');
 const moment = require('moment');
 const dotenv = require('dotenv').config();
 const fs = require('fs');
+const inquirer = require('inquirer');
 
 
 let liri = process.argv[2];
 let query = process.argv[3];
+
+// INQUIRER FUNCTIONS
+function inqList() {
+    inquirer.prompt([
+        {
+            name: "choices",
+            type: list,
+            choices: ["Movie Search", "Song Search", "Band Search"],
+            message: "which type of search would you like to complete?"
+        }
+    ]).then(function(response) {
+        switch (response) {
+            case response.choices[0]:
+            inqOMDB();
+            break;
+
+            case response.choices[1]:
+            inqSpotify();
+            break;
+
+            case response.choices[2]:
+            inqBand();
+            break;
+        }
+    })
+}
+
+function inqOMDB() {
+    inquirer.prompt([
+        {
+            name: "name",
+            message: "What is the name of the movie you would like to learn about?"
+        }
+    ]).then(function(response) {
+        movieSearch(response.name);        
+    })
+};
+
+function inqSpotify() {
+    inquirer.prompt([
+        {
+            name: "name",
+            message: "What is the name of the song you would like to learn about?"
+        }
+    ]).then(function(response) {
+        spotifySearch(response.name);
+    })
+}
+
+function inqBand() {
+    inquirer.prompt([
+        {
+            name: "name",
+            message: "What band would you like to see upcoming shows about?"
+        }
+    ]).then(function(response) {
+        bandSearch(response.name);
+    })
+}
 
 // LIRI FUNCTIONS
 function spotifySearch() {
@@ -17,7 +77,7 @@ function spotifySearch() {
     // log--Preview Link
     // log--Album Name
 }
-function movieSearch() {
+function movieSearch(query) {
     // if (query='') {
     //     query='Mr. Nobody'
     // }
@@ -46,7 +106,7 @@ function movieSearch() {
     );
 }
 
-function bandSearch() {
+function bandSearch(query) {
     axios.get(`https://rest.bandsintown.com/artists/${query}/events?app_id=codingbootcamp`).then(
         function (response) {
             let rd = response.data;
@@ -74,6 +134,7 @@ function showHelp() {
     console.log('node liri spotify <"song-name"> to search for a song by name.');
     console.log('node liri bands <"band-name"> to find an artists upcoming performances.');
     console.log('node liri movie <"movie-name"> to find out movie details');
+    console.log(`<node liri list> to run through this by list`)
     // ~~~~~~~~~~~~UPDATE BELOW~~~~~~~~~~~~~~~
     console.log('node liri moment <*******>');
     console.log('node liri random');
@@ -116,6 +177,10 @@ switch (liri) {
     case 'go-nuts':
     case 'planters':
         random();
+        break;
+
+    case 'list':
+        inqList();
         break;
 
     // If anything other than the above commands display HELP
