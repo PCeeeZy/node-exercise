@@ -148,7 +148,7 @@ switch (liri) {
     // SPOTIFY CASE
     case 'spotify':
     case 'music':
-        spotifySearch();
+        spotifySearch(query);
         break;
 
     // MOVIE CASE
@@ -160,7 +160,7 @@ switch (liri) {
         //     default:
         //         query='Mr. Nobody';
         // }
-        movieSearch();
+        movieSearch(query);
         break;
 
     // BAND/CONCERT CASE
@@ -168,7 +168,7 @@ switch (liri) {
     case 'bands':
     case 'concert':
     case 'concerts':
-        bandSearch();
+        bandSearch(query);
         break;
 
     // RANDOM CASE
