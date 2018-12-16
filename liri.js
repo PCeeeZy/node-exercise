@@ -163,7 +163,7 @@ function random() {
         // liri is index 0
         let dataArr = data.split(",");
         // query is index 1
-        songSearch(dataArr[1]);
+        spotifySearch(dataArr[1]);
     })
 };
 
