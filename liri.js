@@ -1,10 +1,13 @@
 // NODE DEPENDENCIES
 const axios = require('axios');
-const spotify = require('node-spotify-api');
+const spot = require('node-spotify-api');
 const moment = require('moment');
 const dotenv = require('dotenv').config();
 const fs = require('fs');
 const inquirer = require('inquirer');
+const keys = require("./keys.js");
+
+let spotify = new spot(keys.spotify);
 
 
 let liri = process.argv[2];
@@ -19,11 +22,11 @@ function inqList() {
             choices: ["Movie Search", "Song Search", "Band Search"],
             message: "which type of search would you like to complete?"
         }
-    ]).then(function(response) {
-        if(response.choices === "Movie Search") {
+    ]).then(function (response) {
+        if (response.choices === "Movie Search") {
             inqOMDB();
         }
-        if(response.choices === "Song Search") {
+        if (response.choices === "Song Search") {
             inqSpotify();
         }
         else {
@@ -51,8 +54,8 @@ function inqOMDB() {
             name: "name",
             message: "What is the name of the movie you would like to learn about?"
         }
-    ]).then(function(response) {
-        movieSearch(response.name);        
+    ]).then(function (response) {
+        movieSearch(response.name);
     })
 };
 
@@ -62,7 +65,7 @@ function inqSpotify() {
             name: "name",
             message: "What is the name of the song you would like to learn about?"
         }
-    ]).then(function(response) {
+    ]).then(function (response) {
         spotifySearch(response.name);
     })
 }
@@ -73,22 +76,51 @@ function inqBand() {
             name: "name",
             message: "What band would you like to see upcoming shows about?"
         }
-    ]).then(function(response) {
+    ]).then(function (response) {
         bandSearch(response.name);
     })
 }
 
 // LIRI FUNCTIONS
-function spotifySearch() {
+function spotifySearch(query) {
+    if (!query) {
+       query = "Return of the Mack";
+    }
     // using songName
-    // log--Artist(s)
-    // log--Song Name
-    // log--Preview Link
-    // log--Album Name
-}
+    spotify.search({
+        type: 'track',
+        query: query,
+        limit: 3
+    }, function (err, data) {
+        if (err) {
+            console.log('Error occurred: ' + err);
+            return;
+        }
+        var songInfo = data.tracks.items;
+        for (var i = 0; i < songInfo.length; i++) {
+            if (songInfo[i].name.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+                console.log[i];
+                // log--Artist(s)
+                console.log(`Artist(s): ${songInfo[i].artists[0].name}`);
+                // log--Song Name
+                console.log(`Song: ${songInfo[i].name}`);
+                // log--Preview Link
+                console.log(`Preview Link: ${songInfo[i].preview_url}`);
+                // log--Album Name
+                console.log(`Album: ${songInfo[i].album.name}`);
+            }
+        }
+    });
+};
+
+
+
+
+
+
 function movieSearch(query) {
-    if(!query) {
-        query="Mr. Nobody"
+    if (!query) {
+        query = "Mr. Nobody"
     }
     axios.get(`http://www.omdbapi.com/?t=${query}&y=&plot=short&apikey=trilogy`).then(
         function (response) {
@@ -132,7 +164,7 @@ function bandSearch(query) {
             // LOG--Date of the event
             let timeMMDDYYYY = moment(timeUTC).format('MM/DD/YYYY');
             console.log(`This show is on ${timeMMDDYYYY}.`)
-                // Moment turns timeUTC to MM/DD/YYYY
+            // Moment turns timeUTC to MM/DD/YYYY
         }
     )
 }
