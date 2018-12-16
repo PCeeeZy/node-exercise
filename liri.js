@@ -5,11 +5,12 @@ const moment = require('moment');
 const dotenv = require('dotenv').config();
 const fs = require('fs');
 const inquirer = require('inquirer');
-const keys = require("./keys.js");
 
+// HIDE SPOTIFY API KEYS
+const keys = require("./keys.js");
 let spotify = new spot(keys.spotify);
 
-
+// WHAT YOU TYPE ACTIVATES SWITCH CASES/INPUT
 let liri = process.argv[2];
 let query = process.argv[3];
 
@@ -19,40 +20,27 @@ function inqList() {
         {
             name: "choices",
             type: "list",
-            choices: ["Movie Search", "Song Search", "Band Search"],
+            choices: ['Movie Search', 'Song Search', 'Band Search'],
             message: "which type of search would you like to complete?"
         }
     ]).then(function (response) {
-        if (response.choices === "Movie Search") {
+        if (response.choices === 'Movie Search') {
             inqOMDB();
         }
-        if (response.choices === "Song Search") {
+        if (response.choices === 'Song Search') {
             inqSpotify();
         }
-        else {
+        if (response.choices === 'Band Search') {
             inqBand()
         }
-        // switch (response) {
-        //     case response.choices[0]:
-        //     inqOMDB();
-        //     break;
-
-        //     case response.choices[1]:
-        //     inqSpotify();
-        //     break;
-
-        //     case response.choices[2]:
-        //     inqBand();
-        //     break;
-        // }
     })
 }
 
 function inqOMDB() {
     inquirer.prompt([
         {
-            name: "name",
-            message: "What is the name of the movie you would like to learn about?"
+            name: 'name',
+            message: 'What is the name of the movie you would like to learn about?'
         }
     ]).then(function (response) {
         movieSearch(response.name);
@@ -62,8 +50,8 @@ function inqOMDB() {
 function inqSpotify() {
     inquirer.prompt([
         {
-            name: "name",
-            message: "What is the name of the song you would like to learn about?"
+            name: 'name',
+            message: 'What is the name of the song you would like to learn about?'
         }
     ]).then(function (response) {
         spotifySearch(response.name);
@@ -73,18 +61,18 @@ function inqSpotify() {
 function inqBand() {
     inquirer.prompt([
         {
-            name: "name",
-            message: "What band would you like to see upcoming shows about?"
+            name: 'name',
+            message: 'What band would you like to see upcoming shows about?'
         }
     ]).then(function (response) {
         bandSearch(response.name);
     })
 }
 
-// LIRI FUNCTIONS
+// LIRI SPOTIFY SEARCH
 function spotifySearch(query) {
     if (!query) {
-       query = "Return of the Mack";
+        query = 'Return of the Mack';
     }
     // using songName
     spotify.search({
@@ -93,31 +81,22 @@ function spotifySearch(query) {
         limit: 3
     }, function (err, data) {
         if (err) {
-            console.log('Error occurred: ' + err);
+            console.log(`Error occurred: ${err}`);
             return;
         }
-        var songInfo = data.tracks.items;
-        for (var i = 0; i < songInfo.length; i++) {
-            if (songInfo[i].name.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
-                console.log[i];
-                // log--Artist(s)
-                console.log(`Artist(s): ${songInfo[i].artists[0].name}`);
-                // log--Song Name
-                console.log(`Song: ${songInfo[i].name}`);
-                // log--Preview Link
-                console.log(`Preview Link: ${songInfo[i].preview_url}`);
-                // log--Album Name
-                console.log(`Album: ${songInfo[i].album.name}`);
-            }
-        }
+        let songInfo = data.tracks.items;
+        // Artist Name
+        console.log(`Artist(s): ${songInfo[0].artists[0].name}`);
+        // Song Name
+        console.log(`Song: ${songInfo[0].name}`);
+        // Album Name
+        console.log(`Album: ${songInfo[0].album.name}`);
+        // Preview Link
+        console.log(`Preview Link: ${songInfo[0].preview_url}`);
     });
-};
+}
 
-
-
-
-
-
+// LIRI MOVIE SEARCH
 function movieSearch(query) {
     if (!query) {
         query = "Mr. Nobody"
@@ -147,7 +126,11 @@ function movieSearch(query) {
     );
 }
 
+// LIRI BAND SEARCH
 function bandSearch(query) {
+    if(!query) {
+        query = "Foo Fighters"
+    };
     axios.get(`https://rest.bandsintown.com/artists/${query}/events?app_id=codingbootcamp`).then(
         function (response) {
             let rd = response.data;
@@ -162,27 +145,38 @@ function bandSearch(query) {
             // LOG--Venue Location
             console.log(`It's going to take place in ${venueCity}, ${venueRegion}, ${venueCountry}.`);
             // LOG--Date of the event
+            // Moment turns timeUTC to MM/DD/YYYY
             let timeMMDDYYYY = moment(timeUTC).format('MM/DD/YYYY');
             console.log(`This show is on ${timeMMDDYYYY}.`)
-            // Moment turns timeUTC to MM/DD/YYYY
         }
     )
 }
+
+// LIRI DO WHAT IT SAYS 
 function random() {
+    // read random.txt
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        if (error) {
+            return console.log(error);
+        }
+        // split file by ,
+        // liri is index 0
+        let dataArr = data.split(",");
+        // query is index 1
+        songSearch(dataArr[1]);
+    })
+};
 
-}
-
+// LIRI SHOW HELP
 function showHelp() {
     console.log('Available commands include:');
-    console.log('node liri spotify <"song-name"> to search for a song by name.');
-    console.log('node liri bands <"band-name"> to find an artists upcoming performances.');
-    console.log('node liri movie <"movie-name"> to find out movie details');
-    console.log(`<node liri list> to run through this by list`)
-    // ~~~~~~~~~~~~UPDATE BELOW~~~~~~~~~~~~~~~
-    console.log('node liri moment <*******>');
-    console.log('node liri random');
-    console.log('node liri do-what-it-says');
-    console.log('Please remember to use "" for any multi-word searches.')
+    console.log('node liri spotify "song-name" to search for a song by name.');
+    console.log('node liri bands "band-name" -->to find an artists upcoming performances.');
+    console.log('node liri movie "movie-name" --> to find out movie details');
+    console.log('Please remember to use "" for any multi-word searches.\n');
+    console.log('Otherwise try these')
+    console.log('node liri do-what-it-says --> to do something secret')
+    console.log(`node liri list --> to run through this by list`);
 }
 
 // SWITCH CASES---LIRI
@@ -200,10 +194,6 @@ switch (liri) {
     case 'movies':
     case 'ombd':
     case 'imdb':
-        // switch (query) {
-        //     default:
-        //         query='Mr. Nobody';
-        // }
         movieSearch(query);
         break;
 
